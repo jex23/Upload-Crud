@@ -1,48 +1,47 @@
-import random
+import os
 import string
+from collections import Counter
 
-def generate_password(length=12):
+def get_most_common_words(file_path, top_n=5):
     """
-    Generate a random password with a mix of letters, digits, and symbols.
-    
+    Reads a text file and returns the top N most common words.
+
     Args:
-        length (int): Length of the password (default is 12).
-    
+        file_path (str): Path to the text file.
+        top_n (int): Number of top common words to return.
+
     Returns:
-        str: The generated password.
+        list: A list of tuples containing words and their counts.
     """
-    if length < 4:  # Ensure the password is long enough for complexity
-        raise ValueError("Password length must be at least 4 characters")
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"The file '{file_path}' does not exist.")
 
-    # Define character pools
-    letters = string.ascii_letters  # Uppercase and lowercase letters
-    digits = string.digits          # Numbers 0-9
-    symbols = string.punctuation    # Special characters
+    with open(file_path, 'r', encoding='utf-8') as file:
+        text = file.read()
 
-    # Ensure at least one character from each category
-    password = [
-        random.choice(letters),
-        random.choice(digits),
-        random.choice(symbols),
-    ]
+    # Remove punctuation and convert to lowercase
+    translator = str.maketrans('', '', string.punctuation)
+    words = text.translate(translator).lower().split()
 
-    # Fill the rest of the password length with a random selection of all character types
-    all_characters = letters + digits + symbols
-    password += random.choices(all_characters, k=length - len(password))
+    # Count word frequencies
+    word_counts = Counter(words)
 
-    # Shuffle the password to avoid predictable patterns
-    random.shuffle(password)
-
-    return ''.join(password)
+    # Return the top N most common words
+    return word_counts.most_common(top_n)
 
 def main():
+    print("Welcome to the Word Frequency Analyzer!")
+    file_path = input("Enter the path to your text file: ").strip()
+
     try:
-        print("Welcome to the Password Generator!")
-        length = int(input("Enter the desired password length (minimum 4): "))
-        password = generate_password(length)
-        print(f"Generated Password: {password}")
-    except ValueError as e:
+        top_words = get_most_common_words(file_path)
+        print("\nTop 5 Most Common Words:")
+        for word, count in top_words:
+            print(f"{word}: {count} occurrences")
+    except FileNotFoundError as e:
         print(f"Error: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
     main()
