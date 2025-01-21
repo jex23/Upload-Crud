@@ -1,48 +1,31 @@
 import random
 import string
 
-def generate_password(length=12):
+def generate_random_code(length=8, use_letters=True, use_numbers=True):
     """
-    Generate a random password with a mix of letters, digits, and symbols.
-    
+    Generate a random code with the specified length and character set.
+
     Args:
-        length (int): Length of the password (default is 12).
-    
+        length (int): Length of the random code.
+        use_letters (bool): Include letters in the code.
+        use_numbers (bool): Include numbers in the code.
+
     Returns:
-        str: The generated password.
+        str: A randomly generated code.
     """
-    if length < 4:  # Ensure the password is long enough for complexity
-        raise ValueError("Password length must be at least 4 characters")
+    if not use_letters and not use_numbers:
+        raise ValueError("At least one of use_letters or use_numbers must be True.")
 
-    # Define character pools
-    letters = string.ascii_letters  # Uppercase and lowercase letters
-    digits = string.digits          # Numbers 0-9
-    symbols = string.punctuation    # Special characters
+    character_pool = []
+    if use_letters:
+        character_pool.extend(string.ascii_letters)  # 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    if use_numbers:
+        character_pool.extend(string.digits)  # '0123456789'
 
-    # Ensure at least one character from each category
-    password = [
-        random.choice(letters),
-        random.choice(digits),
-        random.choice(symbols),
-    ]
+    return ''.join(random.choices(character_pool, k=length))
 
-    # Fill the rest of the password length with a random selection of all character types
-    all_characters = letters + digits + symbols
-    password += random.choices(all_characters, k=length - len(password))
-
-    # Shuffle the password to avoid predictable patterns
-    random.shuffle(password)
-
-    return ''.join(password)
-
-def main():
-    try:
-        print("Welcome to the Password Generator!")
-        length = int(input("Enter the desired password length (minimum 4): "))
-        password = generate_password(length)
-        print(f"Generated Password: {password}")
-    except ValueError as e:
-        print(f"Error: {e}")
-
+# Example usage:
 if __name__ == "__main__":
-    main()
+    code_length = 10  # Set the desired code length
+    random_code = generate_random_code(length=code_length, use_letters=True, use_numbers=True)
+    print("Generated Random Code:", random_code)
