@@ -1,33 +1,28 @@
 import random
 
-def generate_random_code(length=8, use_letters=True, use_numbers=True, use_special_chars=False):
+def roll_dice(sides=6, rolls=1):
     """
-    Generate a random code with the specified length and character set.
+    Simulate rolling a dice with a specified number of sides and rolls.
 
-    Args:
-        length (int): Length of the random code.
-        use_letters (bool): Include letters in the code.
-        use_numbers (bool): Include numbers in the code.
-        use_special_chars (bool): Include special characters in the code.
+    Parameters:
+        sides (int): Number of sides on the dice. Default is 6.
+        rolls (int): Number of dice rolls. Default is 1.
 
     Returns:
-        str: A randomly generated code.
+        list: A list of roll outcomes.
     """
-    if not use_letters and not use_numbers and not use_special_chars:
-        raise ValueError("At least one of use_letters, use_numbers, or use_special_chars must be True.")
+    if sides < 2:
+        raise ValueError("A dice must have at least 2 sides.")
+    if rolls < 1:
+        raise ValueError("Number of rolls must be at least 1.")
 
-    character_pool = ''
-    if use_letters:
-        character_pool += 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    if use_numbers:
-        character_pool += '0123456789'
-    if use_special_chars:
-        character_pool += '!@#$%^&*()-_=+[]{}|;:,.<>?/'
+    return [random.randint(1, sides) for _ in range(rolls)]
 
-    return ''.join(random.choice(character_pool) for _ in range(length))
-
-# Example usage:
 if __name__ == "__main__":
-    code_length = 16  # Set the desired code length
-    random_code = generate_random_code(length=code_length, use_letters=True, use_numbers=True, use_special_chars=True)
-    print("Generated Random Code:", random_code)
+    try:
+        sides = int(input("Enter the number of sides on the dice (minimum 2): "))
+        rolls = int(input("Enter the number of rolls: "))
+        outcomes = roll_dice(sides, rolls)
+        print(f"You rolled: {outcomes}")
+    except ValueError as e:
+        print("Error:", e)
