@@ -1,28 +1,38 @@
 import random
 
-def roll_dice(sides=6, rolls=1):
+def guess_the_number():
     """
-    Simulate rolling a dice with a specified number of sides and rolls.
-
-    Parameters:
-        sides (int): Number of sides on the dice. Default is 6.
-        rolls (int): Number of dice rolls. Default is 1.
-
-    Returns:
-        list: A list of roll outcomes.
+    A simple number-guessing game where the user tries to guess
+    a randomly generated number within a range.
     """
-    if sides < 2:
-        raise ValueError("A dice must have at least 2 sides.")
-    if rolls < 1:
-        raise ValueError("Number of rolls must be at least 1.")
+    print("Welcome to the Number Guessing Game!")
 
-    return [random.randint(1, sides) for _ in range(rolls)]
-
-if __name__ == "__main__":
     try:
-        sides = int(input("Enter the number of sides on the dice (minimum 2): "))
-        rolls = int(input("Enter the number of rolls: "))
-        outcomes = roll_dice(sides, rolls)
-        print(f"You rolled: {outcomes}")
+        lower_bound = int(input("Enter the lower bound of the range: "))
+        upper_bound = int(input("Enter the upper bound of the range: "))
+
+        if lower_bound >= upper_bound:
+            raise ValueError("Lower bound must be less than the upper bound.")
+
+        target = random.randint(lower_bound, upper_bound)
+        attempts = 0
+
+        print(f"I have picked a number between {lower_bound} and {upper_bound}. Can you guess it?")
+
+        while True:
+            guess = int(input("Enter your guess: "))
+            attempts += 1
+
+            if guess < target:
+                print("Too low! Try again.")
+            elif guess > target:
+                print("Too high! Try again.")
+            else:
+                print(f"Congratulations! You've guessed the number in {attempts} attempts.")
+                break
+
     except ValueError as e:
         print("Error:", e)
+
+if __name__ == "__main__":
+    guess_the_number()
